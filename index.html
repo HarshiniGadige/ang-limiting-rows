@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html ng-app="myModule">
+<head>
+	<link rel="stylesheet" type="text/css" href="myStyle.css">
+</head>
+<body ng-controller="myController">
+	<div>
+		<div>
+			Rows to display:<input type="number" min="2" max="5" ng-model="rowLimit" /><input type="checkbox" ng-model="hideSalary">Hide Salary</input>
+		</div>
+		<br/>
+		<div>
+			Order By:<select ng-model="sortColumn">
+						<option value="name">Name ASC</option>
+						<option value="dateOfBirth">Date of Birth ASC</option>
+						<option value="-city">City DESC</option>
+						<option ng-hide="hideSalary" value="-salary">Salary DESC</option>
+					</select>
+		</div>
+		<br />
+		Search:<input type="text" placeholder="Search Employee" ng-model="searchText.name" /><input type="text" placeholder="Search City" ng-model="searchText.city" /><input type="checkbox" ng-model="exactMatch">Exact Match</input>
+		<br /><br />
+		<table>
+			<thead>
+				<tr>
+					<th ng-click=sortingColumn("name")>Name</th>
+					<th ng-click=sortingColumn("dateOfBirth")>Date Of Birth</th>
+					<th>Gender</th>
+					<th ng-click=sortingColumn("city")>City</th>
+					<th ng-hide="hideSalary" ng-click=sortingColumn("salary")>Salary in Euro</th>
+					<th ng-hide="hideSalary">Salary in Dollar</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="employee in employees|limitTo:rowLimit|orderBy:sortColumn|filter:searchText:exactMatch">
+					<td>{{employee.name|uppercase}}</td>
+					<td>{{employee.dateOfBirth|date:"dd/MM/yyyy"}}</td>
+					<td>{{employee.gender|lowercase|myFilter}}</td>
+					<td>{{employee.city}}</td>
+					<td ng-hide="hideSalary">{{employee.salary|number:2}}</td>
+					<td ng-hide="hideSalary">{{(employee.salary)/60|currency}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+<script type="text/javascript" src="lib/angular.js"></script>
+<script type="text/javascript" src="src/main.js"></script>
+</html>
